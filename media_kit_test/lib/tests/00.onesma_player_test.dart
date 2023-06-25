@@ -7,16 +7,14 @@ import '../common/globals.dart';
 import '../common/widgets.dart';
 import '../common/sources/sources.dart';
 
-class MultiplePlayerMultipleVideoScreen extends StatefulWidget {
-  const MultiplePlayerMultipleVideoScreen({Key? key}) : super(key: key);
+class OnesmaPlayerScreen extends StatefulWidget {
+  const OnesmaPlayerScreen({Key? key}) : super(key: key);
 
   @override
-  State<MultiplePlayerMultipleVideoScreen> createState() =>
-      _MultiplePlayerMultipleVideoScreenState();
+  State<OnesmaPlayerScreen> createState() => _OnesmaPlayerScreenState();
 }
 
-class _MultiplePlayerMultipleVideoScreenState
-    extends State<MultiplePlayerMultipleVideoScreen> {
+class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
   late final List<Player> players = [
     Player(),
     Player(),

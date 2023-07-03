@@ -1,5 +1,11 @@
 # ToDo list
 
+
+## 7/3
+- 澤さんからシンプル動画をもらった
+    - Fuji Ferrari
+    - 488 Challenge Evo
+
 ## 6/25
 - Live Shareを試した
     - https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsls-vs

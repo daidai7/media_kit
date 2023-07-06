@@ -202,8 +202,6 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
 
   Widget getVideos(BuildContext context) {
     final double windowWidth = MediaQuery.of(context).size.width;
-    print(
-        "W:${MediaQuery.of(context).size.width} H:${MediaQuery.of(context).size.height}");
 
     return MediaQuery.of(context).size.width >
             MediaQuery.of(context).size.height

@@ -8,170 +8,6 @@ import '../common/globals.dart';
 import '../common/widgets.dart';
 import '../common/sources/sources.dart';
 
-class OnesmaPlayerScreen extends StatefulWidget {
-  const OnesmaPlayerScreen({Key? key}) : super(key: key);
-
-  @override
-  State<OnesmaPlayerScreen> createState() => _OnesmaPlayerScreenState();
-}
-
-class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
-  late final List<Player> players = [
-    Player(),
-    Player(),
-  ];
-  late final List<VideoController> controllers = [
-    VideoController(
-      players[0],
-      configuration: configuration.value,
-    ),
-    VideoController(
-      players[1],
-      configuration: configuration.value,
-    ),
-  ];
-
-  @override
-  void dispose() {
-    for (final player in players) {
-      player.dispose();
-    }
-    super.dispose();
-  }
-
-  List<Widget> getAssetsListForIndex(BuildContext context, int i) => [
-        for (int j = 0; j < sources.length; j++)
-          ListTile(
-            title: Text(
-              'Video $j',
-              style: const TextStyle(
-                fontSize: 14.0,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () {
-              players[i].open(Media(sources[j]));
-            },
-          ),
-      ];
-
-  Widget getLayeredVideo(double? width, double? height) => Stack(children: [
-        Opacity(
-            opacity: 1.0,
-            child: Video(
-              controller: controllers[0],
-              width: width,
-              height: height,
-            )),
-        Opacity(
-            opacity: 0.6,
-            child: Video(
-              controller: controllers[1],
-              width: width,
-              height: height,
-            )),
-      ]);
-
-  Widget getVideos(BuildContext context) {
-    final double windowWidth = MediaQuery.of(context).size.width;
-    return MediaQuery.of(context).size.width >
-            MediaQuery.of(context).size.height
-        ? Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Expanded(
-                  child: getLayeredVideo(
-                MediaQuery.of(context).size.width,
-                MediaQuery.of(context).size.width * 9.0 / 16.0,
-              )),
-              Row(
-                children: [
-                  Container(
-                      width: windowWidth / 2,
-                      child: MySeekBar(player: players[0])),
-                  Container(
-                      width: windowWidth / 2,
-                      child: MySeekBar(player: players[1])),
-                ],
-              ),
-            ],
-          )
-        : Column(children: [
-            getLayeredVideo(
-              MediaQuery.of(context).size.width,
-              MediaQuery.of(context).size.width * 9.0 / 16.0,
-            ),
-            Row(
-              children: [
-                Container(
-                    width: windowWidth / 2,
-                    child: MySeekBar(player: players[0])),
-                Container(
-                    width: windowWidth / 2,
-                    child: MySeekBar(player: players[1])),
-              ],
-            ),
-          ]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final horizontal =
-        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('package:media_kit'),
-        ),
-        body: horizontal
-            ? Row(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.width /
-                              2 *
-                              12.0 /
-                              16.0,
-                          child: getVideos(context),
-                        ),
-                        getVideoList(context)
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            : ListView(children: [
-                getVideos(context),
-                getVideoList(context),
-              ]));
-  }
-
-  Widget getVideoList(BuildContext context) {
-    final double windowWidth = MediaQuery.of(context).size.width;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: windowWidth / 2,
-          child: Column(children: [
-            ...getAssetsListForIndex(context, 0),
-          ]),
-        ),
-        Container(
-          width: windowWidth / 2,
-          child: Column(children: [
-            ...getAssetsListForIndex(context, 1),
-          ]),
-        ),
-      ],
-    );
-  }
-}
-
 class MySeekBar extends StatefulWidget {
   final Player player;
   const MySeekBar({
@@ -294,5 +130,169 @@ class _MySeekBarState extends State<MySeekBar> {
         )
       ],
     );
+  }
+}
+
+class OnesmaPlayerScreen extends StatefulWidget {
+  const OnesmaPlayerScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OnesmaPlayerScreen> createState() => _OnesmaPlayerScreenState();
+}
+
+class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
+  late final List<Player> players = [
+    Player(),
+    Player(),
+  ];
+  late final List<VideoController> controllers = [
+    VideoController(
+      players[0],
+      configuration: configuration.value,
+    ),
+    VideoController(
+      players[1],
+      configuration: configuration.value,
+    ),
+  ];
+
+  @override
+  void dispose() {
+    for (final player in players) {
+      player.dispose();
+    }
+    super.dispose();
+  }
+
+  List<Widget> getAssetsListForIndex(BuildContext context, int i) => [
+        for (int j = 0; j < sources.length; j++)
+          ListTile(
+            title: Text(
+              'Video $j',
+              style: const TextStyle(
+                fontSize: 14.0,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onTap: () {
+              players[i].open(Media(sources[j]));
+            },
+          ),
+      ];
+
+  Widget getLayeredVideo(double? width, double? height) {
+    return Stack(children: [
+      Opacity(
+          opacity: 1.0,
+          child: Video(
+            controller: controllers[0],
+            width: width,
+            height: height,
+          )),
+      Opacity(
+          opacity: 0.6,
+          child: Video(
+            controller: controllers[1],
+            width: width,
+            height: height,
+          )),
+    ]);
+  }
+
+  Widget getVideos(BuildContext context) {
+    final double windowWidth = MediaQuery.of(context).size.width;
+    print(
+        "W:${MediaQuery.of(context).size.width} H:${MediaQuery.of(context).size.height}");
+
+    return MediaQuery.of(context).size.width >
+            MediaQuery.of(context).size.height
+        ? Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Expanded(
+                  child: getLayeredVideo(
+                windowWidth,
+                windowWidth * 9.0 / 16.0,
+              )),
+              Row(
+                children: [
+                  Container(
+                      width: windowWidth / 2,
+                      child: MySeekBar(player: players[0])),
+                  Container(
+                      width: windowWidth / 2,
+                      child: MySeekBar(player: players[1])),
+                ],
+              ),
+            ],
+          )
+        : Column(children: [
+            getLayeredVideo(
+              windowWidth,
+              windowWidth * 9.0 / 16.0,
+            ),
+            Row(
+              children: [
+                Container(
+                    width: windowWidth / 2,
+                    child: MySeekBar(player: players[0])),
+                Container(
+                    width: windowWidth / 2,
+                    child: MySeekBar(player: players[1])),
+              ],
+            ),
+          ]);
+  }
+
+  Widget getVideoList(BuildContext context) {
+    final double windowWidth = MediaQuery.of(context).size.width;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: windowWidth / 2,
+          child: Column(children: [
+            ...getAssetsListForIndex(context, 0),
+          ]),
+        ),
+        Container(
+          width: windowWidth / 2,
+          child: Column(children: [
+            ...getAssetsListForIndex(context, 1),
+          ]),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final horizontal =
+        MediaQuery.of(context).size.width > MediaQuery.of(context).size.height;
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('package:media_kit'),
+        ),
+        body: horizontal
+            ? Container(
+                width: width,
+                child: ListView(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      width: width,
+                      height: width * 9.0 / 16.0,
+                      child: getVideos(context),
+                    ),
+                    getVideoList(context)
+                  ],
+                ),
+              )
+            : ListView(children: [
+                getVideos(context),
+                getVideoList(context),
+              ]));
   }
 }

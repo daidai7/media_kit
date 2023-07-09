@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-import 'tests/00.onesma_player_test.dart';
 import 'tests/01.single_player_single_video.dart';
 import 'tests/02.single_player_multiple_video.dart';
 import 'tests/03.multiple_player_multiple_video.dart';
@@ -76,21 +75,6 @@ class PrimaryScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            title: const Text(
-              '00.onesma_player_test.dart',
-              style: TextStyle(fontSize: 14.0),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const OnesmaPlayerScreen(),
-                ),
-              );
-            },
-          ),
           ListTile(
             title: const Text(
               '01.single_player_single_video.dart',

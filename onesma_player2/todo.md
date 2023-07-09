@@ -1,5 +1,8 @@
 # ToDo list
 
+## 7/9
+- ファイルの読み込み処理とかを作る下準備として、media_kit_testから、OneSmaPlayer2として分離。ついでにToDoファイルもOneSmaPlayer2配下に移動
+
 ## 7/7
 - 実装を進めた
   - 動画リストを横に並べようとしてWidgetサイズが不定でクラッシュしていたのを修正

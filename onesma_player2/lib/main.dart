@@ -42,48 +42,30 @@ class PrimaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('package:media_kit'),
-        actions: [
-          ValueListenableBuilder<VideoControllerConfiguration>(
-            valueListenable: configuration,
-            builder: (context, value, _) => TextButton(
-              onPressed: () {
-                configuration.value = VideoControllerConfiguration(
-                  enableHardwareAcceleration: !value.enableHardwareAcceleration,
-                );
-              },
-              child: Text(
-                value.enableHardwareAcceleration ? 'H/W' : 'S/W',
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16.0),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            title: const Text(
-              '00.onesma_player_test.dart',
-              style: TextStyle(fontSize: 14.0),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const OnesmaPlayerScreen(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+      // いったん、AppBarは非表示にしておく(アクセラレーション切り替えは不要？)
+      // appBar: AppBar(
+      //   title: const Text('OneSma Player2'),
+      //   actions: [
+      //     ValueListenableBuilder<VideoControllerConfiguration>(
+      //       valueListenable: configuration,
+      //       builder: (context, value, _) => TextButton(
+      //         onPressed: () {
+      //           configuration.value = VideoControllerConfiguration(
+      //             enableHardwareAcceleration: !value.enableHardwareAcceleration,
+      //           );
+      //         },
+      //         child: Text(
+      //           value.enableHardwareAcceleration ? 'H/W' : 'S/W',
+      //           style: const TextStyle(
+      //             color: Colors.white,
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //     const SizedBox(width: 16.0),
+      //   ],
+      // ),
+      body: const OnesmaPlayerScreen(),
     );
   }
 }
@@ -93,11 +75,8 @@ class DownloadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('package:media_kit'),
-      ),
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child: Text(
           'Downloading sample videos...',
           style: TextStyle(fontSize: 14.0),

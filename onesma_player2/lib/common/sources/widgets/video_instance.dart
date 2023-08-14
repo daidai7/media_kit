@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
-import 'common/globals.dart';
+import '../../globals.dart';
 
 class VideoInstance extends StatefulWidget {
   final width;

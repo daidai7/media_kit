@@ -6,8 +6,8 @@ import 'package:media_kit_video/media_kit_video.dart';
 
 import 'common/globals.dart';
 import 'common/sources/sources.dart';
-import 'my_seekbar.dart';
-import 'video_instance.dart';
+import 'common/sources/widgets/my_seekbar.dart';
+import 'common/sources/widgets/video_instance.dart';
 
 class OnesmaPlayerScreen extends StatefulWidget {
   const OnesmaPlayerScreen({Key? key}) : super(key: key);

@@ -7,6 +7,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'common/globals.dart';
 import 'common/sources/sources.dart';
 import 'my_seekbar.dart';
+import 'video_instance.dart';
 
 class OnesmaPlayerScreen extends StatefulWidget {
   const OnesmaPlayerScreen({Key? key}) : super(key: key);
@@ -183,13 +184,22 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
                 child: ListView(
                   children: [
                     modeSelect(),
-                    Container(
-                      alignment: Alignment.center,
-                      width: width,
-                      height: width * 9.0 / 16.0,
-                      child: getVideos(context),
-                    ),
-                    getVideoList(context)
+                    Row(
+                      children: [
+                        VideoInstance(
+                            width: width / 2, height: (width * 9.0 / 16.0)),
+                        VideoInstance(
+                            width: width / 2, height: (width * 9.0 / 16.0)),
+                      ],
+                    )
+
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   width: width,
+                    //   height: width * 9.0 / 16.0,
+                    //   child: getVideos(context),
+                    // ),
+                    // getVideoList(context)
                   ],
                 ),
               )

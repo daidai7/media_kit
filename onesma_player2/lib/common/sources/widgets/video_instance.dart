@@ -29,9 +29,9 @@ class _VideoInstanceState extends State<VideoInstance> {
 
   Widget getVideo() {
     //  実際は（ロード済とか）表示可能になったらだとおもう
-    _isPlayable = player.state.playing;
+    //_isPlayable = player.state.playing;
 
-    return _isPlayable
+    return player.state.playing
         ? Video(
             controller: controller, width: widget.width, height: widget.height)
         : SizedBox(
@@ -46,6 +46,12 @@ class _VideoInstanceState extends State<VideoInstance> {
             width: widget.width);
   }
 
+  videoRewind() {
+    if (_isPlayable) {
+      player.seek(Duration.zero);
+    }
+  }
+
   Widget controlPanel() {
     return Column(children: [
       Wrap(
@@ -53,19 +59,25 @@ class _VideoInstanceState extends State<VideoInstance> {
         spacing: 20,
         children: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                videoRewind();
+              }, //videoRewind(),
               icon: Icon(Icons.fast_rewind_rounded),
-              color: Colors.blue,
+              color: _isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
-              onPressed: () {},
-              icon: Icon(player.state.playing ? Icons.pause : Icons.play_arrow),
-              color: Colors.blue,
+              onPressed: () {
+                setState(() {
+                  _isPlayable = !_isPlayable;
+                });
+              },
+              icon: Icon(_isPlayable ? Icons.pause : Icons.play_arrow),
+              color: _isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
               onPressed: () {},
               icon: Icon(Icons.fast_forward_rounded),
-              color: Colors.blue,
+              color: _isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
               onPressed: () {},

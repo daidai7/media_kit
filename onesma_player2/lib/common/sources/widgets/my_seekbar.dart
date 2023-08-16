@@ -36,26 +36,31 @@ class _MySeekBarState extends State<MySeekBar> {
         widget.player.streams.playing.listen((event) {
           setState(() {
             playing = event;
+            print("playing $event");
           });
         }),
         widget.player.streams.completed.listen((event) {
           setState(() {
             position = Duration.zero;
+            print("Completed $event");
           });
         }),
         widget.player.streams.position.listen((event) {
           setState(() {
             if (!seeking) position = event;
+            print("Position $event");
           });
         }),
         widget.player.streams.duration.listen((event) {
           setState(() {
             duration = event;
+            print("Duration $event");
           });
         }),
         widget.player.streams.buffer.listen((event) {
           setState(() {
             buffer = event;
+            print("Buffer $event");
           });
         }),
       ],
@@ -78,7 +83,8 @@ class _MySeekBarState extends State<MySeekBar> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(width: 12.0),
+            const SizedBox(width: 5.0),
+/*
             ...[
               IconButton(
                 onPressed: widget.player.playOrPause,
@@ -90,7 +96,9 @@ class _MySeekBarState extends State<MySeekBar> {
               ),
               const SizedBox(width: 12.0),
             ],
-            Text(position.toString().substring(2, 10)),
+  */
+            SizedBox(
+                width: 70.0, child: Text(position.toString().substring(2, 10))),
             Expanded(
               child: Slider(
                 min: 0.0,
@@ -119,8 +127,9 @@ class _MySeekBarState extends State<MySeekBar> {
                 },
               ),
             ),
-            Text(duration.toString().substring(2, 10)),
-            const SizedBox(width: 12.0),
+            SizedBox(
+                width: 70.0, child: Text(duration.toString().substring(2, 10))),
+            const SizedBox(width: 5.0),
           ],
         )
       ],

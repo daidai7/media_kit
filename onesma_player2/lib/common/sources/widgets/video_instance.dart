@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import '../../globals.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
-
+import 'my_seekbar.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -22,10 +22,17 @@ class VideoInstance extends StatefulWidget {
 const ICON_SIZE = 48.0;
 
 class _VideoInstanceState extends State<VideoInstance> {
-  late final Player player = Player();
-  late final VideoController controller =
-      VideoController(player, configuration: configuration.value);
+  late final Player player;
+  late final VideoController controller;
   var _isPlayable = false;
+  var _volume = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    player = Player();
+    controller = VideoController(player, configuration: configuration.value);
+  }
 
   @override
   void dispose() {
@@ -39,34 +46,37 @@ class _VideoInstanceState extends State<VideoInstance> {
     var w = widget.width;
     var h = w * 9.0 / 16.0;
 
-    return _isPlayable
-        ? Video(controller: controller, width: w, height: h)
-        : SizedBox(
-            child: Card(
-                color: Colors.black,
-                child: Center(
-                  child: Text('Waiting for Video...',
+    return SizedBox(
+        child: Card(
+            color: Colors.black,
+            child: Center(
+              child: (_isPlayable)
+                  ? Video(controller: controller, width: w, height: h)
+                  : Text('Waiting for Video...',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                       textAlign: TextAlign.center),
-                )),
-            height: h,
-            width: w);
+            )),
+        height: h,
+        width: w);
   }
 
-  videoRewind() {
+  void videoRewind() {
     if (_isPlayable) {
       player.seek(Duration.zero);
     }
   }
 
-  openFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  void openVideoFile() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(dialogTitle: "Choose Video File", type: FileType.video);
     if (result != null) {
       var filePath = result.files.single.path ?? "";
       print(filePath);
-      player.open(Media(filePath));
-      player.pause();
-      _isPlayable = true;
+      await player.open(Media(filePath));
+      await player.pause();
+      setState(() {
+        _isPlayable = true;
+      });
     } else {
       // User canceled the picker
     }
@@ -76,8 +86,18 @@ class _VideoInstanceState extends State<VideoInstance> {
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
+        crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 20,
         children: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  openVideoFile();
+                });
+              },
+              icon: Icon(Icons.file_open_rounded),
+              color: Colors.blue,
+              iconSize: ICON_SIZE),
           IconButton(
               onPressed: () {
                 videoRewind();
@@ -94,22 +114,19 @@ class _VideoInstanceState extends State<VideoInstance> {
               icon: Icon(player.state.playing ? Icons.pause : Icons.play_arrow),
               color: _isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.fast_forward_rounded),
-              color: _isPlayable ? Colors.blue : Colors.grey,
-              iconSize: ICON_SIZE),
-          IconButton(
-              onPressed: () {
-                setState(() {
-                  openFile();
-                });
-              },
-              icon: Icon(Icons.file_open_rounded),
-              color: Colors.blue,
-              iconSize: ICON_SIZE),
+          SizedBox(
+              width: 80.0,
+              child: Slider(
+                  value: _volume,
+                  onChanged: (val) {
+                    setState(() {
+                      _volume = val;
+                      player.setVolume(_volume * 100);
+                    });
+                  }))
         ],
       ),
+      SizedBox(width: widget.width, child: MySeekBar(player: player)),
     ]);
   }
 

@@ -1,10 +1,25 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:desktop_window/desktop_window.dart';
+import 'package:flutter/services.dart';
 import 'onesma_player.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    await DesktopWindow.setWindowSize(Size(1024, 768));
+    await DesktopWindow.setMinWindowSize(Size(1024, 768));
+  }
+  if (Platform.isIOS) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  }
 
   runApp(const MyApp(PrimaryScreen()));
 }

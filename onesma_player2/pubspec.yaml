@@ -33,6 +33,7 @@ dependencies:
   http: ^0.13.5
   file_picker: ^5.3.3
   path_provider: ^2.0.14
+  desktop_window: ^0.4.0
 
 dependency_overrides:
   media_kit:

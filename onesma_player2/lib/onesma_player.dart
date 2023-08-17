@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'common/sources/widgets/video_instance.dart';
+import 'common/video_player.dart';
 
 class OnesmaPlayerScreen extends StatefulWidget {
   const OnesmaPlayerScreen({Key? key}) : super(key: key);
@@ -10,10 +11,17 @@ class OnesmaPlayerScreen extends StatefulWidget {
 
 class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
   bool _overlayMode = false;
+  List<VideoPlayer> players = [
+    VideoPlayer(),
+    VideoPlayer(),
+  ];
 
   @override
   void dispose() {
     super.dispose();
+    for (var i = 0; i < players.length; i++) {
+      players[i].dispose();
+    }
   }
 
   Widget modeSelect() {
@@ -34,12 +42,37 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
     return Scaffold(
         body: ListView(children: [
       modeSelect(),
-      Row(
-        children: [
-          VideoInstance(width: width / 2, height: (width * 9.0 / 16.0)),
-          VideoInstance(width: width / 2, height: (width * 9.0 / 16.0)),
-        ],
-      )
+      _overlayMode
+          ? Stack(
+              alignment: Alignment.center,
+              children: [
+                Opacity(
+                  opacity: 1.0,
+                  child: VideoInstance(
+                      player: players[0],
+                      width: width * 0.8,
+                      height: (width * 0.8 * 9.0 / 16.0)),
+                ),
+                Opacity(
+                    opacity: 0.6,
+                    child: VideoInstance(
+                        player: players[1],
+                        width: width * 0.8,
+                        height: (width * 0.8 * 9.0 / 16.0))),
+              ],
+            )
+          : Row(
+              children: [
+                VideoInstance(
+                    player: players[0],
+                    width: width / 2,
+                    height: (width / 2 * 9.0 / 16.0)),
+                VideoInstance(
+                    player: players[1],
+                    width: width / 2,
+                    height: (width / 2 * 9.0 / 16.0)),
+              ],
+            )
     ]));
   }
 }

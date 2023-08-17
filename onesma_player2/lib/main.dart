@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'onesma_player.dart';
-import 'common/globals.dart';
-import 'common/sources/sources.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
-  runApp(const MyApp(DownloadingScreen()));
-  await prepareSources();
+
   runApp(const MyApp(PrimaryScreen()));
 }
 
@@ -66,22 +62,6 @@ class PrimaryScreen extends StatelessWidget {
       //   ],
       // ),
       body: const OnesmaPlayerScreen(),
-    );
-  }
-}
-
-class DownloadingScreen extends StatelessWidget {
-  const DownloadingScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Downloading sample videos...',
-          style: TextStyle(fontSize: 14.0),
-        ),
-      ),
     );
   }
 }

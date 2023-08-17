@@ -36,31 +36,31 @@ class _MySeekBarState extends State<MySeekBar> {
         widget.player.streams.playing.listen((event) {
           setState(() {
             playing = event;
-            print("playing $event");
+            // print("playing $event");
           });
         }),
         widget.player.streams.completed.listen((event) {
           setState(() {
             position = Duration.zero;
-            print("Completed $event");
+            // print("Completed $event");
           });
         }),
         widget.player.streams.position.listen((event) {
           setState(() {
             if (!seeking) position = event;
-            print("Position $event");
+            // print("Position $event");
           });
         }),
         widget.player.streams.duration.listen((event) {
           setState(() {
             duration = event;
-            print("Duration $event");
+            // print("Duration $event");
           });
         }),
         widget.player.streams.buffer.listen((event) {
           setState(() {
             buffer = event;
-            print("Buffer $event");
+            // print("Buffer $event");
           });
         }),
       ],

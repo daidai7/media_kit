@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../video_player.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path;
+
+import '../../video_player.dart';
 import 'my_seekbar.dart';
 import 'dart:async';
 import 'dart:io';
@@ -13,7 +15,17 @@ class VideoInstance extends StatefulWidget {
   final width;
   final height;
   final VideoPlayer player;
-  const VideoInstance(
+  bool hasPointA = false;
+  bool hasPointB = false;
+  Duration pointA = Duration.zero;
+  Duration pointB = Duration.zero;
+
+  void init() {
+    hasPointA = false;
+    hasPointB = false;
+  }
+
+  VideoInstance(
       {Key? key,
       required this.player,
       required this.width,
@@ -27,12 +39,30 @@ class VideoInstance extends StatefulWidget {
 const ICON_SIZE = 40.0;
 
 class _VideoInstanceState extends State<VideoInstance> {
+  List<StreamSubscription> subscriptions = [];
+  void initState() {
+    subscriptions.addAll([
+      widget.player.player.streams.position.listen((event) {
+        if (widget.player.player.state.playing) {
+          if (widget.hasPointB) {
+            print("Playing $event / pointB: ${widget.pointB}");
+            if (event > widget.pointB) {
+              widget.player.player.seek(widget.pointA);
+            }
+          }
+        }
+        setState(() {
+          print("Playing $event");
+        });
+      }),
+    ]);
+  }
+
   Widget getVideo() {
     //  実際は（ロード済とか）表示可能になったらだとおもう
     //_isPlayable = player.state.playing;
     var w = widget.width;
     var h = w * 9.0 / 16.0;
-
     return SizedBox(
         child: Card(
             color: Colors.black,
@@ -64,6 +94,7 @@ class _VideoInstanceState extends State<VideoInstance> {
       await widget.player.player.pause();
       setState(() {
         widget.player.isPlayable = true;
+        widget.init();
       });
     } else {
       // User canceled the picker
@@ -88,7 +119,9 @@ class _VideoInstanceState extends State<VideoInstance> {
               iconSize: ICON_SIZE),
           IconButton(
               onPressed: () {
-                videoRewind();
+                setState(() {
+                  videoRewind();
+                });
               }, //videoRewind(),
               icon: Icon(Icons.fast_rewind_rounded),
               color: widget.player.isPlayable ? Colors.blue : Colors.grey,
@@ -105,16 +138,44 @@ class _VideoInstanceState extends State<VideoInstance> {
               color: widget.player.isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.skip_previous_outlined),
-            color: widget.player.isPlayable ? Colors.blue : Colors.grey,
-            iconSize: ICON_SIZE,
+            onPressed: () {
+              setState(() {
+                widget.hasPointA = !widget.hasPointA;
+                if (widget.hasPointA) {
+                  widget.pointA = widget.player.player.state.position;
+                } else {
+                  widget.pointA = Duration.zero;
+                }
+                print("Set ${widget.hasPointA}: PointA ${widget.pointA}");
+              });
+            },
+            icon: FaIcon(FontAwesomeIcons.font),
+            color: widget.player.isPlayable
+                ? (widget.hasPointA ? Colors.red : Colors.blue)
+                : Colors.grey,
+            iconSize: ICON_SIZE * 0.5,
           ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.skip_next_outlined),
-            color: widget.player.isPlayable ? Colors.blue : Colors.grey,
-            iconSize: ICON_SIZE,
+            onPressed: () {
+              setState(() {
+                widget.hasPointB = !widget.hasPointB;
+                if (widget.hasPointB) {
+                  widget.pointB = widget.player.player.state.position;
+                  if (widget.pointA > widget.pointB) {
+                    widget.hasPointA = false;
+                    widget.pointA = Duration.zero;
+                  }
+                } else {
+                  widget.pointB = Duration.zero;
+                }
+                print("Set ${widget.hasPointB}: PointB ${widget.pointB}");
+              });
+            },
+            icon: FaIcon(FontAwesomeIcons.bold),
+            color: widget.player.isPlayable
+                ? (widget.hasPointB ? Colors.red : Colors.blue)
+                : Colors.grey,
+            iconSize: ICON_SIZE * 0.5,
           ),
           SizedBox(
               width: 80.0,

@@ -45,15 +45,11 @@ class _VideoInstanceState extends State<VideoInstance> {
       widget.player.player.streams.position.listen((event) {
         if (widget.player.player.state.playing) {
           if (widget.hasPointB) {
-            print("Playing $event / pointB: ${widget.pointB}");
             if (event > widget.pointB) {
               widget.player.player.seek(widget.pointA);
             }
           }
         }
-        setState(() {
-          print("Playing $event");
-        });
       }),
     ]);
   }

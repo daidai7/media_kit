@@ -32,21 +32,16 @@ class _VideoControllerState extends State<VideoController> {
   void initState() {
     subscriptions.addAll([
       widget.player.player.streams.position.listen((event) {
-        if (widget.player.player.state.playing) {
+        // これ、本当はループ判定をVideoPlayer側に持たせたい
+        if (widget.player.isPlaying()) {
           if (widget.player.hasPointB) {
             if (event > widget.player.pointB) {
-              widget.player.player.seek(widget.player.pointA);
+              widget.player.rewind();
             }
           }
         }
       }),
     ]);
-  }
-
-  void videoRewind() {
-    if (widget.player.isPlayable) {
-      widget.player.player.seek(Duration.zero);
-    }
   }
 
   void openVideoFile() async {
@@ -66,7 +61,8 @@ class _VideoControllerState extends State<VideoController> {
     }
   }
 
-  Widget controlPanel() {
+  @override
+  Widget build(BuildContext context) {
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
@@ -85,7 +81,7 @@ class _VideoControllerState extends State<VideoController> {
           IconButton(
               onPressed: () {
                 setState(() {
-                  videoRewind();
+                  widget.player.rewind();
                 });
               }, //videoRewind(),
               icon: Icon(Icons.fast_rewind_rounded),
@@ -94,25 +90,17 @@ class _VideoControllerState extends State<VideoController> {
           IconButton(
               onPressed: () {
                 setState(() {
-                  widget.player.player.playOrPause();
+                  widget.player.playOrPause();
                 });
               },
-              icon: Icon(widget.player.player.state.playing
-                  ? Icons.pause
-                  : Icons.play_arrow),
+              icon: Icon(
+                  widget.player.isPlaying() ? Icons.pause : Icons.play_arrow),
               color: widget.player.isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
             onPressed: () {
               setState(() {
-                widget.player.hasPointA = !widget.player.hasPointA;
-                if (widget.player.hasPointA) {
-                  widget.player.pointA = widget.player.player.state.position;
-                } else {
-                  widget.player.pointA = Duration.zero;
-                }
-                print(
-                    "Set ${widget.player.hasPointA}: PointA ${widget.player.pointA}");
+                widget.player.setPointA();
               });
             },
             icon: FaIcon(FontAwesomeIcons.font),
@@ -124,18 +112,7 @@ class _VideoControllerState extends State<VideoController> {
           IconButton(
             onPressed: () {
               setState(() {
-                widget.player.hasPointB = !widget.player.hasPointB;
-                if (widget.player.hasPointB) {
-                  widget.player.pointB = widget.player.player.state.position;
-                  if (widget.player.pointA > widget.player.pointB) {
-                    widget.player.hasPointA = false;
-                    widget.player.pointA = Duration.zero;
-                  }
-                } else {
-                  widget.player.pointB = Duration.zero;
-                }
-                print(
-                    "Set ${widget.player.hasPointB}: PointB ${widget.player.pointB}");
+                widget.player.setPointB();
               });
             },
             icon: FaIcon(FontAwesomeIcons.bold),
@@ -145,26 +122,18 @@ class _VideoControllerState extends State<VideoController> {
             iconSize: ICON_SIZE * 0.5,
           ),
           SizedBox(
-              width: 80.0,
+              width: 100.0,
               child: Slider(
                   value: widget.player.volume,
                   onChanged: (val) {
                     setState(() {
-                      widget.player.volume = val;
-                      widget.player.player.setVolume(val * 100);
+                      widget.player.setVolume(val);
                     });
                   }))
         ],
       ),
       SizedBox(
           width: widget.width, child: MySeekBar(player: widget.player.player)),
-    ]);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      controlPanel(),
     ]);
   }
 }

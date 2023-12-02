@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'common/sources/widgets/video_instance.dart';
+import 'common/sources/widgets/video_controller.dart';
+import 'common/sources/widgets/video_sync_controller.dart';
 import 'common/video_player.dart';
 
 class OnesmaPlayerScreen extends StatefulWidget {
@@ -40,7 +42,7 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: ListView(children: [
+        body: Column(children: [
       modeSelect(),
       _overlayMode
           ? Stack(
@@ -63,16 +65,30 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
             )
           : Row(
               children: [
-                VideoInstance(
-                    player: players[0],
-                    width: width / 2,
-                    height: (width / 2 * 9.0 / 16.0)),
-                VideoInstance(
-                    player: players[1],
-                    width: width / 2,
-                    height: (width / 2 * 9.0 / 16.0)),
+                Column(
+                  children: [
+                    VideoInstance(
+                        player: players[0],
+                        width: width / 2,
+                        height: (width / 2 * 9.0 / 16.0)),
+                    VideoController(player: players[0], width: width / 2)
+                  ],
+                ),
+                Column(
+                  children: [
+                    VideoInstance(
+                        player: players[1],
+                        width: width / 2,
+                        height: (width / 2 * 9.0 / 16.0)),
+                    VideoController(player: players[1], width: width / 2)
+                  ],
+                ),
               ],
-            )
+            ),
+      VideoSyncController(
+        players: players,
+        width: width,
+      )
     ]));
   }
 }

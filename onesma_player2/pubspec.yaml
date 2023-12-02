@@ -31,8 +31,10 @@ dependencies:
 
   path: ^1.8.2
   http: ^0.13.5
-  file_picker: ^5.2.4
+  file_picker: ^5.3.3
   path_provider: ^2.0.14
+  desktop_window: ^0.4.0
+  font_awesome_flutter: ^10.6.0
 
 dependency_overrides:
   media_kit:

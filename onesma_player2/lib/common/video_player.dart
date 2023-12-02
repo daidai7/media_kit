@@ -5,12 +5,23 @@ import 'globals.dart';
 class VideoPlayer {
   late final Player player;
   late final VideoController controller;
+
+  bool hasPointA = false;
+  bool hasPointB = false;
+  Duration pointA = Duration.zero;
+  Duration pointB = Duration.zero;
+
   var isPlayable = false;
   var volume = 1.0;
 
   VideoPlayer() {
     player = Player();
     controller = VideoController(player, configuration: configuration.value);
+  }
+
+  void init() {
+    hasPointA = false;
+    hasPointB = false;
   }
 
   void dispose() {

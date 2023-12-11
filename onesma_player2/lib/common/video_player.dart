@@ -1,6 +1,7 @@
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'globals.dart';
+import 'dart:async';
 
 class VideoPlayer {
   late final Player player;
@@ -14,9 +15,25 @@ class VideoPlayer {
   var isPlayable = false;
   var volume = 1.0;
 
+  List<StreamSubscription> subscriptions = [];
+  Duration currentPos = Duration.zero;
+
   VideoPlayer() {
     player = Player();
     controller = VideoController(player, configuration: configuration.value);
+    subscriptions.addAll([
+      player.streams.position.listen((event) {
+        // これ、本当はループ判定をVideoPlayer側に持たせたい
+        currentPos = event;
+        if (isPlaying()) {
+          if (hasPointB) {
+            if (event > pointB) {
+              rewind();
+            }
+          }
+        }
+      }),
+    ]);
   }
 
   void init() {
@@ -38,6 +55,18 @@ class VideoPlayer {
     }
   }
 
+  void seek(var duration) {
+    if (isPlayable) {
+      player.seek(duration);
+    }
+  }
+
+  void seekRelative(var duration) {
+    if (isPlayable) {
+      player.seek(currentPos + duration);
+    }
+  }
+
   void playOrPause() {
     if (isPlayable) {
       player.playOrPause();
@@ -56,7 +85,7 @@ class VideoPlayer {
     } else {
       pointA = Duration.zero;
     }
-    print("Player:${player.hashCode} PointA:$hasPointA @ $pointA");
+    //print("Player:${player.hashCode} PointA:$hasPointA @ $pointA");
   }
 
   void setPointB() {
@@ -70,6 +99,6 @@ class VideoPlayer {
     } else {
       pointB = Duration.zero;
     }
-    print("Player:${player.hashCode} PointB:$hasPointB @ $pointB");
+    //print("Player:${player.hashCode} PointB:$hasPointB @ $pointB");
   }
 }

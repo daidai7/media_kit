@@ -26,24 +26,9 @@ class VideoController extends StatefulWidget {
 }
 
 const ICON_SIZE = 40.0;
+const CONTROL_FONT_SIZE = 10.0;
 
 class _VideoControllerState extends State<VideoController> {
-  List<StreamSubscription> subscriptions = [];
-  void initState() {
-    subscriptions.addAll([
-      widget.player.player.streams.position.listen((event) {
-        // これ、本当はループ判定をVideoPlayer側に持たせたい
-        if (widget.player.isPlaying()) {
-          if (widget.player.hasPointB) {
-            if (event > widget.player.pointB) {
-              widget.player.rewind();
-            }
-          }
-        }
-      }),
-    ]);
-  }
-
   void openVideoFile() async {
     FilePickerResult? result = await FilePicker.platform
         .pickFiles(dialogTitle: "Choose Video File"); //, type: FileType.video);
@@ -88,16 +73,6 @@ class _VideoControllerState extends State<VideoController> {
               color: widget.player.isPlayable ? Colors.blue : Colors.grey,
               iconSize: ICON_SIZE),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  widget.player.playOrPause();
-                });
-              },
-              icon: Icon(
-                  widget.player.isPlaying() ? Icons.pause : Icons.play_arrow),
-              color: widget.player.isPlayable ? Colors.blue : Colors.grey,
-              iconSize: ICON_SIZE),
-          IconButton(
             onPressed: () {
               setState(() {
                 widget.player.setPointA();
@@ -132,6 +107,116 @@ class _VideoControllerState extends State<VideoController> {
                   }))
         ],
       ),
+      //  2行目
+      Wrap(
+          direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 2,
+          children: [
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: -1000));
+                        });
+                      },
+                child: Text("-1.0"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: -500));
+                        });
+                      },
+                child: Text("-0.5"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: -100));
+                        });
+                      },
+                child: Text("-0.1"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+            IconButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player.playOrPause();
+                        });
+                      },
+                icon: Icon(
+                    widget.player.isPlaying() ? Icons.pause : Icons.play_arrow),
+                color: Colors.blue,
+                iconSize: ICON_SIZE * 1.5),
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: 100));
+                        });
+                      },
+                child: Text("+0.1"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: 500));
+                        });
+                      },
+                child: Text("+0.5"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+            ElevatedButton(
+                onPressed: !widget.player.isPlayable
+                    ? null
+                    : () {
+                        setState(() {
+                          widget.player
+                              .seekRelative(Duration(milliseconds: 1000));
+                        });
+                      },
+                child: Text("+1.0"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(40, 30),
+                )),
+          ]),
+      //  3行目
       SizedBox(
           width: widget.width, child: MySeekBar(player: widget.player.player)),
     ]);

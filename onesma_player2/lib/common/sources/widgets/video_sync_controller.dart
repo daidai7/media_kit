@@ -46,6 +46,7 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
     return ret;
   }
 
+  // 強制的に両方とも再生/停止させる必要があり（双方で逆の状態だと動作不良）
   void videoPlayAll() {
     for (var i = 0; i < widget.players.length; i++) {
       VideoSyncController.isSyncPlaying = !VideoSyncController.isSyncPlaying;
@@ -55,15 +56,60 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
     }
   }
 
+  void seekRelativeAll(var duration) {
+    for (var i = 0; i < widget.players.length; i++) {
+      VideoSyncController.isSyncPlaying = !VideoSyncController.isSyncPlaying;
+      if (widget.players[i].isPlayable) {
+        widget.players[i].seekRelative(duration);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("SyncController :${widget.hashCode}");
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
         crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 0,
+        spacing: 2,
         children: [
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: -1000));
+                    },
+              child: Text("-1.0"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: -500));
+                    },
+              child: Text("-0.5"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: -100));
+                    },
+              child: Text("-0.1"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+
           IconButton(
               onPressed: () {
                 setState(() {
@@ -88,6 +134,43 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
                   : Icons.start),
               color: Colors.blue,
               iconSize: ICON_SIZE),
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: 100));
+                    },
+              child: Text("+0.1"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: 500));
+                    },
+              child: Text("+0.5"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+          ElevatedButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      seekRelativeAll(Duration(milliseconds: 1000));
+                    },
+              child: Text("+1.0"),
+              style: TextButton.styleFrom(
+                textStyle: const TextStyle(fontSize: 10),
+                foregroundColor: Colors.white, // foreground
+                fixedSize: Size(60, 30),
+              )),
+
           //  将来的に＋1ラップ、とかに使うボタン
           // IconButton(
           //   onPressed: () {

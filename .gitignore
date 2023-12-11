@@ -1,3 +1,6 @@
 media_kit_test/macos/Podfile.lock
 .DS_Store
 onesma_player2/macos
+onesma_player2/ios
+onesma_player2/android
+onesma_player2/.metadata

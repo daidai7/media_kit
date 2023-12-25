@@ -48,6 +48,10 @@ class VideoPlayer {
   }
 
   void dispose() {
+    for (final s in subscriptions) {
+      s.cancel();
+    }
+
     player.dispose();
   }
 

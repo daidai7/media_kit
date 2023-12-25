@@ -39,10 +39,18 @@ class _VideoControllerState extends State<VideoController> {
       widget.player.player.streams.playing.listen((event) {
         setState(() {
           // print("playing $event");
-          widget.playIcon = event ? Icons.play_arrow : Icons.pause;
+          widget.playIcon = event ? Icons.pause : Icons.play_arrow;
         });
       }),
     ]);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (final s in subscriptions) {
+      s.cancel();
+    }
   }
 
   void openVideoFile() async {

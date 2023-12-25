@@ -45,6 +45,14 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    for (final s in subscriptions) {
+      s.cancel();
+    }
+  }
+
   void videoRewindAll() {
     for (var i = 0; i < widget.players.length; i++) {
       if (widget.players[i].isPlayable) {

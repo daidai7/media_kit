@@ -14,6 +14,7 @@ import 'dart:io';
 class VideoController extends StatefulWidget {
   final VideoPlayer player;
   final width;
+  IconData playIcon = Icons.play_arrow;
 
   VideoController({
     Key? key,
@@ -29,6 +30,21 @@ const ICON_SIZE = 40.0;
 const CONTROL_FONT_SIZE = 10.0;
 
 class _VideoControllerState extends State<VideoController> {
+  List<StreamSubscription> subscriptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    subscriptions.addAll([
+      widget.player.player.streams.playing.listen((event) {
+        setState(() {
+          // print("playing $event");
+          widget.playIcon = event ? Icons.play_arrow : Icons.pause;
+        });
+      }),
+    ]);
+  }
+
   void openVideoFile() async {
     FilePickerResult? result = await FilePicker.platform
         .pickFiles(dialogTitle: "Choose Video File"); //, type: FileType.video);
@@ -163,11 +179,16 @@ class _VideoControllerState extends State<VideoController> {
                     ? null
                     : () {
                         setState(() {
-                          widget.player.playOrPause();
+                          if (widget.player.isPlaying()) {
+                            widget.player.pause();
+                            widget.playIcon = Icons.play_arrow;
+                          } else {
+                            widget.player.play();
+                            widget.playIcon = Icons.pause;
+                          }
                         });
                       },
-                icon: Icon(
-                    widget.player.isPlaying() ? Icons.pause : Icons.play_arrow),
+                icon: Icon(widget.playIcon),
                 color: Colors.blue,
                 iconSize: ICON_SIZE * 1.5),
             ElevatedButton(

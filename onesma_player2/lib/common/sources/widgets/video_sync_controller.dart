@@ -14,7 +14,6 @@ import 'dart:io';
 class VideoSyncController extends StatefulWidget {
   List<VideoPlayer> players;
   final width;
-
   static var isSyncPlaying = false; //あまりStaticは使いたくないけど…
 
   VideoSyncController({
@@ -30,6 +29,22 @@ class VideoSyncController extends StatefulWidget {
 const ICON_SIZE = 40.0;
 
 class _VideoSyncControllerState extends State<VideoSyncController> {
+  List<StreamSubscription> subscriptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i = 0; i < widget.players.length; i++) {
+      subscriptions.add(
+        widget.players[i].player.streams.playing.listen((event) {
+          setState(() {
+            // print("playing $event");
+          });
+        }),
+      );
+    }
+  }
+
   void videoRewindAll() {
     for (var i = 0; i < widget.players.length; i++) {
       if (widget.players[i].isPlayable) {
@@ -46,12 +61,29 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
     return ret;
   }
 
-  // 強制的に両方とも再生/停止させる必要があり（双方で逆の状態だと動作不良）
   void videoPlayAll() {
     for (var i = 0; i < widget.players.length; i++) {
       VideoSyncController.isSyncPlaying = !VideoSyncController.isSyncPlaying;
       if (widget.players[i].isPlayable) {
-        widget.players[i].player.playOrPause();
+        widget.players[i].player.play();
+      }
+    }
+  }
+
+  void videoPauseAll() {
+    for (var i = 0; i < widget.players.length; i++) {
+      VideoSyncController.isSyncPlaying = !VideoSyncController.isSyncPlaying;
+      if (widget.players[i].isPlayable) {
+        widget.players[i].player.pause();
+      }
+    }
+  }
+
+  void videoSetRateAll(var rate) {
+    for (var i = 0; i < widget.players.length; i++) {
+      VideoSyncController.isSyncPlaying = !VideoSyncController.isSyncPlaying;
+      if (widget.players[i].isPlayable) {
+        widget.players[i].player.setRate(rate);
       }
     }
   }
@@ -111,29 +143,47 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
               )),
 
           IconButton(
-              onPressed: () {
-                setState(() {
-                  videoRewindAll();
-                });
-              }, //videoRewind(),
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      setState(() {
+                        videoRewindAll();
+                      });
+                    }, //videoRewind(),
               icon: Icon(Icons.fast_rewind_rounded),
               color: Colors.blue,
               iconSize: ICON_SIZE),
+
           IconButton(
-              onPressed: () {
-                if (isSyncPlayable()) {
-                  setState(() {
-                    VideoSyncController.isSyncPlaying =
-                        !VideoSyncController.isSyncPlaying;
-                    videoPlayAll();
-                  });
-                }
-              },
-              icon: Icon(VideoSyncController.isSyncPlaying
-                  ? Icons.pause
-                  : Icons.start),
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      setState(() {
+                        VideoSyncController.isSyncPlaying =
+                            !VideoSyncController.isSyncPlaying;
+                        videoSetRateAll(1.0);
+                        videoPauseAll();
+                      });
+                    },
+              icon: Icon(Icons.pause),
               color: Colors.blue,
               iconSize: ICON_SIZE),
+
+          IconButton(
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      setState(() {
+                        VideoSyncController.isSyncPlaying =
+                            !VideoSyncController.isSyncPlaying;
+                        videoSetRateAll(1.0);
+                        videoPlayAll();
+                      });
+                    },
+              icon: Icon(Icons.start),
+              color: Colors.blue,
+              iconSize: ICON_SIZE),
+
           ElevatedButton(
               onPressed: !isSyncPlayable()
                   ? null
@@ -183,6 +233,60 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
           // ),
         ],
       ),
+      Wrap(
+          direction: Axis.horizontal,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 2,
+          children: [
+            ElevatedButton(
+                onPressed: !isSyncPlayable()
+                    ? null
+                    : () {
+                        videoSetRateAll(0.25);
+                      },
+                child: Text("25%"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 10),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(60, 30),
+                )),
+            ElevatedButton(
+                onPressed: !isSyncPlayable()
+                    ? null
+                    : () {
+                        videoSetRateAll(0.50);
+                      },
+                child: Text("50%"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 10),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(60, 30),
+                )),
+            ElevatedButton(
+                onPressed: !isSyncPlayable()
+                    ? null
+                    : () {
+                        videoSetRateAll(1.0);
+                      },
+                child: Text("100%"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 10),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(60, 30),
+                )),
+            ElevatedButton(
+                onPressed: !isSyncPlayable()
+                    ? null
+                    : () {
+                        videoSetRateAll(2.0);
+                      },
+                child: Text("200%"),
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 10),
+                  foregroundColor: Colors.white, // foreground
+                  fixedSize: Size(60, 30),
+                )),
+          ])
       // SizedBox(
       //     width: widget.width, child: MySeekBar(player: widget.player.player)),
     ]);

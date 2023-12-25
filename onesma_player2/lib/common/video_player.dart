@@ -5,7 +5,7 @@ import 'dart:async';
 
 class VideoPlayer {
   late final Player player;
-  late final VideoController controller;
+  late VideoController controller;
 
   bool hasPointA = false;
   bool hasPointB = false;
@@ -21,15 +21,17 @@ class VideoPlayer {
   VideoPlayer() {
     player = Player();
     controller = VideoController(player, configuration: configuration.value);
+
     subscriptions.addAll([
       player.streams.position.listen((event) {
-        // これ、本当はループ判定をVideoPlayer側に持たせたい
         currentPos = event;
         if (isPlaying()) {
           if (hasPointB) {
             if (event > pointB) {
               rewind();
             }
+          } else if (event >= player.state.duration) {
+            rewind();
           }
         }
       }),
@@ -71,6 +73,14 @@ class VideoPlayer {
     if (isPlayable) {
       player.playOrPause();
     }
+  }
+
+  void play() {
+    player.play();
+  }
+
+  void pause() {
+    player.pause();
   }
 
   void setVolume(var vol) {

@@ -11,8 +11,8 @@ Future<void> main() async {
   MediaKit.ensureInitialized();
 
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    await DesktopWindow.setWindowSize(Size(1024, 768));
-    await DesktopWindow.setMinWindowSize(Size(1024, 768));
+    await DesktopWindow.setWindowSize(Size(1280, 768));
+    await DesktopWindow.setMinWindowSize(Size(1280, 768));
   }
   if (Platform.isIOS) {
     await SystemChrome.setPreferredOrientations([

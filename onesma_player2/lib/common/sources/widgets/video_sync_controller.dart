@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart' as path;
 
 import '../../video_player.dart';
 import 'my_seekbar.dart';
+import 'button_style.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -27,7 +28,6 @@ class VideoSyncController extends StatefulWidget {
 }
 
 const ICON_SIZE = 40.0;
-const CONTROL_FONT_SIZE = 15.0;
 
 class _VideoSyncControllerState extends State<VideoSyncController> {
   List<StreamSubscription> subscriptions = [];
@@ -108,16 +108,6 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle buttonStyle = TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-        textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-        disabledForegroundColor: Colors.white, // foreground
-        disabledBackgroundColor: Colors.grey,
-        foregroundColor: Colors.white, // foreground
-        backgroundColor: Colors.blue,
-        fixedSize: const Size(60, 30));
-
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,

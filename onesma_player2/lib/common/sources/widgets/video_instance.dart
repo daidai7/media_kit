@@ -27,9 +27,13 @@ class VideoInstance extends StatefulWidget {
   State<VideoInstance> createState() => _VideoInstanceState();
 }
 
-const ICON_SIZE = 40.0;
-
 class _VideoInstanceState extends State<VideoInstance> {
+  @override
+  void dispose() {
+    super.dispose();
+    print("dispose video instance");
+  }
+
   Widget getVideo() {
     //  実際は（ロード済とか）表示可能になったらだとおもう
     //_isPlayable = player.state.playing;

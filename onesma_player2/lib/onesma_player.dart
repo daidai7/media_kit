@@ -30,6 +30,7 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
     return SwitchListTile(
       title: const Text('VideoOverLay '),
       value: _overlayMode,
+      activeColor: Colors.blue,
       onChanged: (bool flag) => {
         setState(() {
           _overlayMode = flag;

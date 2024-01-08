@@ -27,7 +27,7 @@ class VideoController extends StatefulWidget {
 }
 
 const ICON_SIZE = 40.0;
-const CONTROL_FONT_SIZE = 10.0;
+const CONTROL_FONT_SIZE = 15.0;
 
 class _VideoControllerState extends State<VideoController> {
   List<StreamSubscription> subscriptions = [];
@@ -43,6 +43,11 @@ class _VideoControllerState extends State<VideoController> {
         });
       }),
     ]);
+    if (widget.player.isPlayable) {
+      setState(() {
+        widget.player.play();
+      });
+    }
   }
 
   @override
@@ -72,58 +77,71 @@ class _VideoControllerState extends State<VideoController> {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle buttonStyle = TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+        disabledForegroundColor: Colors.white, // foreground
+        disabledBackgroundColor: Colors.grey,
+        foregroundColor: Colors.white, // foreground
+        backgroundColor: Colors.blue,
+        fixedSize: const Size(40, 30));
+
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
         crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 0,
+        spacing: 2,
         children: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  openVideoFile();
-                });
-              },
-              icon: Icon(Icons.file_open_rounded),
-              color: Colors.blue,
-              iconSize: ICON_SIZE),
+            color: Colors.blue,
+            icon: const Icon(Icons.file_open_rounded),
+            iconSize: ICON_SIZE,
+            onPressed: () {
+              setState(() {
+                openVideoFile();
+              });
+            },
+          ),
           IconButton(
-              onPressed: () {
-                setState(() {
-                  widget.player.rewind();
-                });
-              }, //videoRewind(),
-              icon: Icon(Icons.fast_rewind_rounded),
-              color: widget.player.isPlayable ? Colors.blue : Colors.grey,
-              iconSize: ICON_SIZE),
+            color: widget.player.isPlayable ? Colors.blue : Colors.grey,
+            icon: const Icon(Icons.fast_rewind_rounded),
+            iconSize: ICON_SIZE,
+            onPressed: () {
+              setState(() {
+                widget.player.rewind();
+              });
+            }, //videoRewind(),
+          ),
           IconButton(
+            color: widget.player.isPlayable
+                ? (widget.player.hasPointA ? Colors.red : Colors.blue)
+                : Colors.grey,
+            icon: const FaIcon(FontAwesomeIcons.font),
+            iconSize: ICON_SIZE * 0.5,
             onPressed: () {
               setState(() {
                 widget.player.setPointA();
               });
             },
-            icon: FaIcon(FontAwesomeIcons.font),
-            color: widget.player.isPlayable
-                ? (widget.player.hasPointA ? Colors.red : Colors.blue)
-                : Colors.grey,
-            iconSize: ICON_SIZE * 0.5,
           ),
           IconButton(
+            color: widget.player.isPlayable
+                ? (widget.player.hasPointB ? Colors.red : Colors.blue)
+                : Colors.grey,
+            icon: const FaIcon(FontAwesomeIcons.bold),
+            iconSize: ICON_SIZE * 0.5,
             onPressed: () {
               setState(() {
                 widget.player.setPointB();
               });
             },
-            icon: FaIcon(FontAwesomeIcons.bold),
-            color: widget.player.isPlayable
-                ? (widget.player.hasPointB ? Colors.red : Colors.blue)
-                : Colors.grey,
-            iconSize: ICON_SIZE * 0.5,
           ),
           SizedBox(
               width: 100.0,
               child: Slider(
                   value: widget.player.volume,
+                  activeColor: Colors.blue,
                   onChanged: (val) {
                     setState(() {
                       widget.player.setVolume(val);
@@ -133,118 +151,96 @@ class _VideoControllerState extends State<VideoController> {
       ),
       //  2行目
       Wrap(
-          direction: Axis.horizontal,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: 2,
-          children: [
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: -1000));
-                        });
-                      },
-                child: Text("-1.0"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: -500));
-                        });
-                      },
-                child: Text("-0.5"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: -100));
-                        });
-                      },
-                child: Text("-0.1"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-            IconButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          if (widget.player.isPlaying()) {
-                            widget.player.pause();
-                            widget.playIcon = Icons.play_arrow;
-                          } else {
-                            widget.player.play();
-                            widget.playIcon = Icons.pause;
-                          }
-                        });
-                      },
-                icon: Icon(widget.playIcon),
-                color: Colors.blue,
-                iconSize: ICON_SIZE * 1.5),
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: 100));
-                        });
-                      },
-                child: Text("+0.1"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: 500));
-                        });
-                      },
-                child: Text("+0.5"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-            ElevatedButton(
-                onPressed: !widget.player.isPlayable
-                    ? null
-                    : () {
-                        setState(() {
-                          widget.player
-                              .seekRelative(Duration(milliseconds: 1000));
-                        });
-                      },
-                child: Text("+1.0"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(40, 30),
-                )),
-          ]),
+        direction: Axis.horizontal,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 2,
+        children: [
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: -1000));
+                    });
+                  },
+            child: const Text("-1.0"),
+          ),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: -500));
+                    });
+                  },
+            child: const Text("-0.5"),
+          ),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: -100));
+                    });
+                  },
+            child: const Text("-0.1"),
+          ),
+          IconButton(
+            color: Colors.blue,
+            icon: Icon(widget.playIcon),
+            iconSize: ICON_SIZE * 1.5,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      if (widget.player.isPlaying()) {
+                        widget.player.pause();
+                        widget.playIcon = Icons.play_arrow;
+                      } else {
+                        widget.player.play();
+                        widget.playIcon = Icons.pause;
+                      }
+                    });
+                  },
+          ),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: 100));
+                    });
+                  },
+            child: const Text("+0.1"),
+          ),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: 500));
+                    });
+                  },
+            child: const Text("+0.5"),
+          ),
+          ElevatedButton(
+            style: buttonStyle,
+            onPressed: !widget.player.isPlayable
+                ? null
+                : () {
+                    setState(() {
+                      widget.player.seekRelative(Duration(milliseconds: 1000));
+                    });
+                  },
+            child: const Text("+1.0"),
+          ),
+        ],
+      ),
       //  3行目
       SizedBox(
           width: widget.width, child: MySeekBar(player: widget.player.player)),

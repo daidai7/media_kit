@@ -27,6 +27,7 @@ class VideoSyncController extends StatefulWidget {
 }
 
 const ICON_SIZE = 40.0;
+const CONTROL_FONT_SIZE = 15.0;
 
 class _VideoSyncControllerState extends State<VideoSyncController> {
   List<StreamSubscription> subscriptions = [];
@@ -107,6 +108,16 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle buttonStyle = TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        textStyle: const TextStyle(fontSize: CONTROL_FONT_SIZE),
+        disabledForegroundColor: Colors.white, // foreground
+        disabledBackgroundColor: Colors.grey,
+        foregroundColor: Colors.white, // foreground
+        backgroundColor: Colors.blue,
+        fixedSize: const Size(60, 30));
+
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
@@ -114,120 +125,103 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
         spacing: 2,
         children: [
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: -1000));
-                    },
-              child: Text("-1.0"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(Duration(milliseconds: -1000));
+                  },
+            child: const Text("-1.0"),
+          ),
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: -500));
-                    },
-              child: Text("-0.5"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(const Duration(milliseconds: -500));
+                  },
+            child: const Text("-0.5"),
+          ),
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: -100));
-                    },
-              child: Text("-0.1"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(const Duration(milliseconds: -100));
+                  },
+            child: const Text("-0.1"),
+          ),
+          IconButton(
+            color: Colors.blue,
+            icon: const Icon(Icons.fast_rewind_rounded),
+            iconSize: ICON_SIZE,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    setState(() {
+                      videoRewindAll();
+                    });
+                  }, //videoRewind(),
+          ),
+          IconButton(
+            color: Colors.blue,
+            icon: const Icon(Icons.pause),
+            iconSize: ICON_SIZE,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    setState(() {
+                      VideoSyncController.isSyncPlaying =
+                          !VideoSyncController.isSyncPlaying;
+                      videoSetRateAll(1.0);
+                      videoPauseAll();
+                    });
+                  },
+          ),
 
           IconButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      setState(() {
-                        videoRewindAll();
-                      });
-                    }, //videoRewind(),
-              icon: Icon(Icons.fast_rewind_rounded),
-              color: Colors.blue,
-              iconSize: ICON_SIZE),
-
-          IconButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      setState(() {
-                        VideoSyncController.isSyncPlaying =
-                            !VideoSyncController.isSyncPlaying;
-                        videoSetRateAll(1.0);
-                        videoPauseAll();
-                      });
-                    },
-              icon: Icon(Icons.pause),
-              color: Colors.blue,
-              iconSize: ICON_SIZE),
-
-          IconButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      setState(() {
-                        VideoSyncController.isSyncPlaying =
-                            !VideoSyncController.isSyncPlaying;
-                        videoSetRateAll(1.0);
-                        videoPlayAll();
-                      });
-                    },
-              icon: Icon(Icons.start),
-              color: Colors.blue,
-              iconSize: ICON_SIZE),
+            color: Colors.blue,
+            icon: const Icon(Icons.start),
+            iconSize: ICON_SIZE,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    setState(() {
+                      VideoSyncController.isSyncPlaying =
+                          !VideoSyncController.isSyncPlaying;
+                      videoSetRateAll(1.0);
+                      videoPlayAll();
+                    });
+                  },
+          ),
 
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: 100));
-                    },
-              child: Text("+0.1"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(const Duration(milliseconds: 100));
+                  },
+            child: const Text("+0.1"),
+          ),
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: 500));
-                    },
-              child: Text("+0.5"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(const Duration(milliseconds: 500));
+                  },
+            child: const Text("+0.5"),
+          ),
           ElevatedButton(
-              onPressed: !isSyncPlayable()
-                  ? null
-                  : () {
-                      seekRelativeAll(Duration(milliseconds: 1000));
-                    },
-              child: Text("+1.0"),
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 10),
-                foregroundColor: Colors.white, // foreground
-                fixedSize: Size(60, 30),
-              )),
+            style: buttonStyle,
+            onPressed: !isSyncPlayable()
+                ? null
+                : () {
+                    seekRelativeAll(const Duration(milliseconds: 1000));
+                  },
+            child: const Text("+1.0"),
+          ),
 
           //  将来的に＋1ラップ、とかに使うボタン
           // IconButton(
@@ -247,53 +241,41 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
           spacing: 2,
           children: [
             ElevatedButton(
-                onPressed: !isSyncPlayable()
-                    ? null
-                    : () {
-                        videoSetRateAll(0.25);
-                      },
-                child: Text("25%"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 10),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(60, 30),
-                )),
+              style: buttonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      videoSetRateAll(0.25);
+                    },
+              child: const Text("25%"),
+            ),
             ElevatedButton(
-                onPressed: !isSyncPlayable()
-                    ? null
-                    : () {
-                        videoSetRateAll(0.50);
-                      },
-                child: Text("50%"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 10),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(60, 30),
-                )),
+              style: buttonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      videoSetRateAll(0.50);
+                    },
+              child: const Text("50%"),
+            ),
             ElevatedButton(
-                onPressed: !isSyncPlayable()
-                    ? null
-                    : () {
-                        videoSetRateAll(1.0);
-                      },
-                child: Text("100%"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 10),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(60, 30),
-                )),
+              style: buttonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      videoSetRateAll(1.0);
+                    },
+              child: const Text("100%"),
+            ),
             ElevatedButton(
-                onPressed: !isSyncPlayable()
-                    ? null
-                    : () {
-                        videoSetRateAll(2.0);
-                      },
-                child: Text("200%"),
-                style: TextButton.styleFrom(
-                  textStyle: const TextStyle(fontSize: 10),
-                  foregroundColor: Colors.white, // foreground
-                  fixedSize: Size(60, 30),
-                )),
+              style: buttonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      videoSetRateAll(2.0);
+                    },
+              child: const Text("200%"),
+            ),
           ])
       // SizedBox(
       //     width: widget.width, child: MySeekBar(player: widget.player.player)),

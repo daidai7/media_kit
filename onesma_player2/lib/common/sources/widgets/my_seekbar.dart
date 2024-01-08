@@ -101,6 +101,7 @@ class _MySeekBarState extends State<MySeekBar> {
                 width: 70.0, child: Text(position.toString().substring(2, 10))),
             Expanded(
               child: Slider(
+                activeColor: Colors.blue,
                 min: 0.0,
                 max: duration.inMilliseconds.toDouble(),
                 value: position.inMilliseconds.toDouble().clamp(

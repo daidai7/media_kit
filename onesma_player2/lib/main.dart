@@ -11,8 +11,8 @@ Future<void> main() async {
   MediaKit.ensureInitialized();
 
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    await DesktopWindow.setWindowSize(Size(1280, 768));
-    await DesktopWindow.setMinWindowSize(Size(1280, 768));
+    await DesktopWindow.setWindowSize(Size(1280, 800));
+    await DesktopWindow.setMinWindowSize(Size(1280, 800));
   }
   if (Platform.isIOS) {
     await SystemChrome.setPreferredOrientations([
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // これを追加するだけ
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {

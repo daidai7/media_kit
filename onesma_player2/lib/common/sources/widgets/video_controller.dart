@@ -43,11 +43,6 @@ class _VideoControllerState extends State<VideoController> {
         });
       }),
     ]);
-    if (widget.player.isPlayable) {
-      setState(() {
-        widget.player.play();
-      });
-    }
   }
 
   @override

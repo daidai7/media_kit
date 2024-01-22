@@ -28,7 +28,7 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
 
   Widget modeSelect() {
     return SwitchListTile(
-      title: const Text('VideoOverLay '),
+      title: const Text('VideoOverLay ', textAlign: TextAlign.right),
       value: _overlayMode,
       activeColor: Colors.blue,
       onChanged: (bool flag) => {

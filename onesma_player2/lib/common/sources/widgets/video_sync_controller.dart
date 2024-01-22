@@ -155,32 +155,24 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
           ),
           IconButton(
             color: Colors.blue,
-            icon: const Icon(Icons.pause),
+            icon: Icon(VideoSyncController.isSyncPlaying
+                ? Icons.pause
+                : Icons.play_arrow),
             iconSize: ICON_SIZE,
             onPressed: !isSyncPlayable()
                 ? null
                 : () {
                     setState(() {
+                      //  再生中なら停止する
+                      if (VideoSyncController.isSyncPlaying) {
+                        videoPauseAll();
+                      } else {
+                        // 速度を等倍に戻して再生する
+                        videoSetRateAll(1.0);
+                        videoPlayAll();
+                      }
                       VideoSyncController.isSyncPlaying =
                           !VideoSyncController.isSyncPlaying;
-                      videoSetRateAll(1.0);
-                      videoPauseAll();
-                    });
-                  },
-          ),
-
-          IconButton(
-            color: Colors.blue,
-            icon: const Icon(Icons.start),
-            iconSize: ICON_SIZE,
-            onPressed: !isSyncPlayable()
-                ? null
-                : () {
-                    setState(() {
-                      VideoSyncController.isSyncPlaying =
-                          !VideoSyncController.isSyncPlaying;
-                      videoSetRateAll(1.0);
-                      videoPlayAll();
                     });
                   },
           ),

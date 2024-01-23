@@ -39,32 +39,59 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
     );
   }
 
+  void updateOpaque() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final opL = VideoSyncController.getOpaqueLevelLeft();
+    final opR = VideoSyncController.getOpaqueLevelRight();
     return Scaffold(
         body: Column(children: [
       modeSelect(),
       _overlayMode
-          ? Stack(
-              alignment: Alignment.center,
-              children: [
-                Opacity(
-                  opacity: 1.0,
-                  child: VideoInstance(
-                      player: players[0],
-                      width: width * 0.8,
-                      height: (width * 0.8 * 9.0 / 16.0)),
-                ),
-                Opacity(
-                    opacity: 0.6,
-                    child: VideoInstance(
-                        player: players[1],
-                        width: width * 0.8,
-                        height: (width * 0.8 * 9.0 / 16.0))),
-              ],
-            )
-          : Row(
+          // オーバーレイモード：左右の透過度でどちらが上になるか決める
+          ? opL > opR
+              ? Stack(
+                  alignment: Alignment.center,
+                  // 左が上
+                  children: [
+                      Opacity(
+                        opacity: opL,
+                        child: VideoInstance(
+                            player: players[0],
+                            width: width * 0.8,
+                            height: (width * 0.8 * 9.0 / 16.0)),
+                      ),
+                      Opacity(
+                          opacity: opR,
+                          child: VideoInstance(
+                              player: players[1],
+                              width: width * 0.8,
+                              height: (width * 0.8 * 9.0 / 16.0))),
+                    ])
+              : Stack(
+                  alignment: Alignment.center,
+                  // 右が上
+                  children: [
+                      Opacity(
+                        opacity: opR,
+                        child: VideoInstance(
+                            player: players[1],
+                            width: width * 0.8,
+                            height: (width * 0.8 * 9.0 / 16.0)),
+                      ),
+                      Opacity(
+                          opacity: opL,
+                          child: VideoInstance(
+                              player: players[0],
+                              width: width * 0.8,
+                              height: (width * 0.8 * 9.0 / 16.0))),
+                    ])
+          : // 通常モード：左右に並べる
+          Row(
               children: [
                 Column(
                   children: [
@@ -89,6 +116,8 @@ class _OnesmaPlayerScreenState extends State<OnesmaPlayerScreen> {
       VideoSyncController(
         players: players,
         width: width,
+        isOverlayed: _overlayMode,
+        notifyParent: updateOpaque,
       )
     ]));
   }

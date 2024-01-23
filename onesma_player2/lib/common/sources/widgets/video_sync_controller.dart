@@ -13,18 +13,38 @@ import 'dart:async';
 import 'dart:io';
 
 class VideoSyncController extends StatefulWidget {
+  final Function() notifyParent;
   List<VideoPlayer> players;
   final width;
+  final isOverlayed;
+
   static var isSyncPlaying = false; //あまりStaticは使いたくないけど…
+  static var opaqueLevel = 0.5;
 
   VideoSyncController({
     Key? key,
     required this.players,
     required this.width,
+    required this.isOverlayed,
+    required this.notifyParent,
   }) : super(key: key);
 
   @override
   State<VideoSyncController> createState() => _VideoSyncControllerState();
+
+  static double getOpaqueLevelLeft() {
+    if (opaqueLevel < 0.5) {
+      return 1.0;
+    }
+    return (1.0 - opaqueLevel);
+  }
+
+  static double getOpaqueLevelRight() {
+    if (opaqueLevel >= 0.5) {
+      return 1.0;
+    }
+    return opaqueLevel;
+  }
 }
 
 const ICON_SIZE = 40.0;
@@ -106,8 +126,7 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget centerControl() {
     return Column(children: [
       Wrap(
         direction: Axis.horizontal,
@@ -119,7 +138,7 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
             onPressed: !isSyncPlayable()
                 ? null
                 : () {
-                    seekRelativeAll(Duration(milliseconds: -1000));
+                    seekRelativeAll(const Duration(milliseconds: -1000));
                   },
             child: const Text("-1.0"),
           ),
@@ -258,9 +277,149 @@ class _VideoSyncControllerState extends State<VideoSyncController> {
                     },
               child: const Text("200%"),
             ),
+            widget.isOverlayed
+                ? SizedBox(
+                    width: 200.0,
+                    height: 50.0,
+                    child: Slider(
+                        value: VideoSyncController.opaqueLevel,
+                        activeColor: Colors.blue,
+                        onChanged: (val) {
+                          setState(() {
+                            VideoSyncController.opaqueLevel = val;
+                            widget.notifyParent();
+                          });
+                        }))
+                : const SizedBox(),
           ])
       // SizedBox(
       //     width: widget.width, child: MySeekBar(player: widget.player.player)),
     ]);
+  }
+
+  Widget partControl(var ch) {
+    return Column(children: [
+      Wrap(
+        direction: Axis.horizontal,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 2,
+        children: [
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: -1000));
+                      }
+                    },
+              child: const Text("-1.0"),
+            ),
+          ),
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: -500));
+                      }
+                    },
+              child: const Text("-0.5"),
+            ),
+          ),
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: -100));
+                      }
+                    },
+              child: const Text("-0.1"),
+            ),
+          ),
+          const SizedBox(
+            width: 15,
+          ),
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: 100));
+                      }
+                    },
+              child: const Text("+0.1"),
+            ),
+          ),
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: 500));
+                      }
+                    },
+              child: const Text("+0.5"),
+            ),
+          ),
+          SizedBox(
+            width: 35,
+            height: 30,
+            child: ElevatedButton(
+              style: miniButtonStyle,
+              onPressed: !isSyncPlayable()
+                  ? null
+                  : () {
+                      if (widget.players[ch].isPlayable) {
+                        widget.players[ch]
+                            .seekRelative(const Duration(milliseconds: 1000));
+                      }
+                    },
+              child: const Text("+1.0"),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 30),
+      Text(ch == 0 ? "LEFT" : "RIGHT"),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.isOverlayed
+        ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            partControl(0),
+            SizedBox(width: 20),
+            centerControl(),
+            SizedBox(width: 20),
+            partControl(1),
+          ])
+        : centerControl();
   }
 }

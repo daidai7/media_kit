@@ -141,43 +141,55 @@ class _VideoControllerState extends State<VideoController> {
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 2,
         children: [
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: -1000));
-                    });
-                  },
-            child: const Text("-1.0"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player
+                            .seekRelative(Duration(milliseconds: -1000));
+                      });
+                    },
+              child: const Text("-1.0"),
+            ),
           ),
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: -500));
-                    });
-                  },
-            child: const Text("-0.5"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player
+                            .seekRelative(Duration(milliseconds: -500));
+                      });
+                    },
+              child: const Text("-0.5"),
+            ),
           ),
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: -100));
-                    });
-                  },
-            child: const Text("-0.1"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player
+                            .seekRelative(Duration(milliseconds: -100));
+                      });
+                    },
+              child: const Text("-0.1"),
+            ),
           ),
           IconButton(
             color: Colors.blue,
             icon: Icon(widget.playIcon),
-            iconSize: ICON_SIZE * 1.5,
+            iconSize: ICON_SIZE * 1.2,
             onPressed: !widget.player.isPlayable
                 ? null
                 : () {
@@ -192,38 +204,48 @@ class _VideoControllerState extends State<VideoController> {
                     });
                   },
           ),
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: 100));
-                    });
-                  },
-            child: const Text("+0.1"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player.seekRelative(Duration(milliseconds: 100));
+                      });
+                    },
+              child: const Text("+0.1"),
+            ),
           ),
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: 500));
-                    });
-                  },
-            child: const Text("+0.5"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player.seekRelative(Duration(milliseconds: 500));
+                      });
+                    },
+              child: const Text("+0.5"),
+            ),
           ),
-          ElevatedButton(
-            style: buttonStyle,
-            onPressed: !widget.player.isPlayable
-                ? null
-                : () {
-                    setState(() {
-                      widget.player.seekRelative(Duration(milliseconds: 1000));
-                    });
-                  },
-            child: const Text("+1.0"),
+          SizedBox(
+            width: BUTTON_WIDTH,
+            child: ElevatedButton(
+              style: buttonStyle,
+              onPressed: !widget.player.isPlayable
+                  ? null
+                  : () {
+                      setState(() {
+                        widget.player
+                            .seekRelative(Duration(milliseconds: 1000));
+                      });
+                    },
+              child: const Text("+1.0"),
+            ),
           ),
         ],
       ),

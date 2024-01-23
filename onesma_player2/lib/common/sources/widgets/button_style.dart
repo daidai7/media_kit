@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const CONTROL_FONT_SIZE = 15.0;
 const MINI_CONTROL_FONT_SIZE = 10.0;
+const BUTTON_WIDTH = 45.0;
 
 final ButtonStyle buttonStyle = TextButton.styleFrom(
     padding: EdgeInsets.zero,
@@ -10,8 +11,7 @@ final ButtonStyle buttonStyle = TextButton.styleFrom(
     disabledForegroundColor: Colors.white, // foreground
     disabledBackgroundColor: Colors.grey,
     foregroundColor: Colors.white, // foreground
-    backgroundColor: Colors.blue,
-    fixedSize: const Size(40, 20));
+    backgroundColor: Colors.blue);
 
 final ButtonStyle miniButtonStyle = TextButton.styleFrom(
     padding: EdgeInsets.zero,

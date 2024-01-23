@@ -27,7 +27,7 @@ class VideoController extends StatefulWidget {
   State<VideoController> createState() => _VideoControllerState();
 }
 
-const ICON_SIZE = 40.0;
+const ICON_SIZE = 32.0;
 
 class _VideoControllerState extends State<VideoController> {
   List<StreamSubscription> subscriptions = [];
@@ -35,14 +35,14 @@ class _VideoControllerState extends State<VideoController> {
   @override
   void initState() {
     super.initState();
-    subscriptions.addAll([
+    subscriptions.add(
       widget.player.player.streams.playing.listen((event) {
         setState(() {
           // print("playing $event");
           widget.playIcon = event ? Icons.pause : Icons.play_arrow;
         });
       }),
-    ]);
+    );
   }
 
   @override
@@ -73,6 +73,7 @@ class _VideoControllerState extends State<VideoController> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      //  1行目
       Wrap(
         direction: Axis.horizontal,
         crossAxisAlignment: WrapCrossAlignment.center,

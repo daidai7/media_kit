@@ -15,10 +15,8 @@ Future<void> main() async {
 
     WindowOptions windowOptions = WindowOptions(
       size: Size(1024, 768),
-      center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
-      titleBarStyle: TitleBarStyle.hidden,
       title: 'OneSma Player2',
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {

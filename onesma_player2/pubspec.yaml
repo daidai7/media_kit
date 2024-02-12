@@ -28,13 +28,15 @@ dependencies:
     path: ../media_kit_libs_ios_video
   media_kit_libs_android_video:
     path: ../media_kit_libs_android_video
+ 
 
   path: ^1.8.2
   http: ^0.13.5
   file_picker: ^5.3.3
   path_provider: ^2.0.14
-  desktop_window: ^0.4.0
+  window_manager: ^0.3.8
   font_awesome_flutter: ^10.6.0
+  xml: ^6.5.0
 
 dependency_overrides:
   media_kit:

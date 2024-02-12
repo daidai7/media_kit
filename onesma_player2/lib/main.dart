@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:desktop_window/desktop_window.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:flutter/services.dart';
 import 'onesma_player.dart';
 
@@ -11,8 +11,20 @@ Future<void> main() async {
   MediaKit.ensureInitialized();
 
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
-    await DesktopWindow.setWindowSize(Size(1024, 720));
-    await DesktopWindow.setMinWindowSize(Size(1024, 720));
+    await windowManager.ensureInitialized();
+
+    WindowOptions windowOptions = WindowOptions(
+      size: Size(1024, 768),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+      title: 'OneSma Player2',
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
   if (Platform.isIOS) {
     await SystemChrome.setPreferredOrientations([
